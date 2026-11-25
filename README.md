@@ -2,13 +2,15 @@
 
 Uma base só, dois editores. A pessoa no Cursor e a pessoa no OpenCode perguntam as mesmas coisas e recebem a mesma resposta. O laboratório começa pequeno e cresce por etapas.
 
+O relato do teste, com os prints, está em [docs/como-funciona.md](docs/como-funciona.md). Esse texto é a base do artigo.
+
 ## Etapa 1, agora
 
 Duas perguntas.
 
 **Qual é a janela de deploy?** A resposta é um texto na memória do Loom, na chave `team/deploy-window`: terça e quinta, às 16h.
 
-**Quem é o plantonista do dia?** A memória não guarda o nome. A chave `team/oncall-lookup` só diz qual ferramenta chamar. O agente chama `plantonista_de_hoje` no MCP `plantao`, e a resposta sai de `plantao/roster.json`. Trocar a pessoa de plantão é editar esse arquivo. Os dois editores passam a ver o nome novo, sem mudar a memória.
+**Quem é o plantonista do dia?** A memória não guarda o nome. A chave `team/oncall-lookup` só diz qual ferramenta chamar. O agente chama `plantonista_de_hoje` no MCP `plantao`. Essa ferramenta faz um GET em `http://127.0.0.1:3010/plantonista`, e quem responde é o Mockoon, com o corpo definido em `mockoon/plantao.openapi.yaml`. Trocar a pessoa de plantão é editar esse exemplo e reiniciar o mock.
 
 ## Etapa 2, depois
 
@@ -23,7 +25,15 @@ curl -fsSL https://github.com/ClickHouse/loom/releases/latest/download/install.s
   && sh loom-install.sh && rm loom-install.sh
 ```
 
-Dashboard em http://localhost:7777/. Grave as duas memórias da etapa 1:
+Dashboard em http://localhost:7777/.
+
+Suba o mock do plantão. A porta 3000 desta máquina já tem outro serviço, então o Mockoon fica na 3010:
+
+```bash
+docker compose up -d
+```
+
+Confira com `curl -s http://127.0.0.1:3010/plantonista`. Grave as duas memórias da etapa 1:
 
 ```bash
 sh scripts/seed-memory.sh
