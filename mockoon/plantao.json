@@ -1,0 +1,68 @@
+{
+  "uuid": "0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a",
+  "lastMigration": 27,
+  "name": "On-call",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3010,
+  "hostname": "0.0.0.0",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "1b1b1b1b-1b1b-4b1b-8b1b-1b1b1b1b1b1b",
+      "type": "http",
+      "documentation": "On-call person for the current shift",
+      "method": "get",
+      "endpoint": "plantonista",
+      "responses": [
+        {
+          "uuid": "2c2c2c2c-2c2c-4c2c-8c2c-2c2c2c2c2c2c",
+          "body": "{\n  \"nome\": \"Luiz Schons\",\n  \"canal\": \"#plantao\",\n  \"ate\": \"2026-11-25T09:00:00-03:00\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "today",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": true,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "1b1b1b1b-1b1b-4b1b-8b1b-1b1b1b1b1b1b"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "data": [],
+  "callbacks": []
+}

@@ -1,0 +1,32 @@
+openapi: 3.0.3
+info:
+  title: On-call
+  version: 0.1.0
+  description: Fake on-call service. The plantao MCP only forwards what this route returns.
+paths:
+  /plantonista:
+    get:
+      operationId: plantonistaDeHoje
+      summary: Who is on call right now
+      responses:
+        "200":
+          description: On-call person for the current shift
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [nome, canal, ate]
+                properties:
+                  nome:
+                    type: string
+                    description: Name of the person on call.
+                  canal:
+                    type: string
+                    description: Channel where the person can be reached.
+                  ate:
+                    type: string
+                    description: End of the shift, as an ISO-8601 timestamp.
+              example:
+                nome: Luiz Schons
+                canal: "#plantao"
+                ate: "2026-11-25T09:00:00-03:00"

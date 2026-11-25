@@ -1,0 +1,8 @@
+services:
+  plantao:
+    image: mockoon/cli:latest
+    ports:
+      - "127.0.0.1:3010:3010"
+    volumes:
+      - ./mockoon/plantao.json:/data/plantao.json:ro
+    command: ["--data", "/data/plantao.json", "--port", "3010"]

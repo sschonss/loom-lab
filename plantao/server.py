@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""MCP mínimo do plantão. A resposta mora no roster, não na memória do Loom."""
+"""Thin on-call MCP. The answer comes from the Mockoon HTTP mock."""
 
 import json
+import os
 import sys
-from pathlib import Path
+import urllib.error
+import urllib.request
 
-ROSTER = Path(__file__).with_name("roster.json")
+PLANTAO_URL = os.environ.get("PLANTAO_URL", "http://127.0.0.1:3010/plantonista")
 
 
 def send(message: dict) -> None:
@@ -33,7 +35,9 @@ def read_message():
 
 
 def plantonista() -> dict:
-    return json.loads(ROSTER.read_text())
+    request = urllib.request.Request(PLANTAO_URL, method="GET")
+    with urllib.request.urlopen(request, timeout=5) as response:
+        return json.loads(response.read().decode())
 
 
 def handle(message: dict) -> None:
@@ -63,7 +67,7 @@ def handle(message: dict) -> None:
                     "tools": [
                         {
                             "name": "plantonista_de_hoje",
-                            "description": "Devolve quem está de plantão agora, segundo o roster do serviço.",
+                            "description": "Returns who is on call right now, according to the service roster.",
                             "inputSchema": {"type": "object", "properties": {}},
                         }
                     ]
@@ -78,28 +82,49 @@ def handle(message: dict) -> None:
                 {
                     "jsonrpc": "2.0",
                     "id": msg_id,
-                    "error": {"code": -32602, "message": "ferramenta desconhecida"},
+                    "error": {"code": -32602, "message": "unknown tool"},
                 }
             )
             return
-        send(
-            {
-                "jsonrpc": "2.0",
-                "id": msg_id,
-                "result": {
-                    "content": [
-                        {"type": "text", "text": json.dumps(plantonista(), ensure_ascii=False)}
-                    ]
-                },
-            }
-        )
+        try:
+            body = plantonista()
+            send(
+                {
+                    "jsonrpc": "2.0",
+                    "id": msg_id,
+                    "result": {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": json.dumps(body, ensure_ascii=False),
+                            }
+                        ]
+                    },
+                }
+            )
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+            send(
+                {
+                    "jsonrpc": "2.0",
+                    "id": msg_id,
+                    "result": {
+                        "isError": True,
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": f"The on-call mock did not respond at {PLANTAO_URL}: {exc}",
+                            }
+                        ],
+                    },
+                }
+            )
         return
     if msg_id is not None:
         send(
             {
                 "jsonrpc": "2.0",
                 "id": msg_id,
-                "error": {"code": -32601, "message": "método não tratado"},
+                "error": {"code": -32601, "message": "method not handled"},
             }
         )
 

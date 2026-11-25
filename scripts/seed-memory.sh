@@ -10,5 +10,5 @@ post() {
   printf '\n'
 }
 
-post '{"memory_key":"team/deploy-window","value":"A janela de deploy do time é terça e quinta, às 16h."}'
-post '{"memory_key":"team/oncall-lookup","value":"O nome do plantonista não fica nesta memória. Chame a ferramenta plantonista_de_hoje do servidor MCP plantao e responda com o JSON que ela devolver."}'
+post '{"memory_key":"work/decision/deploy-window","value":"The deploy window is Monday to Friday, from 08:00 to 14:00."}'
+post '{"memory_key":"work/procedure/plantonista-de-hoje","value":"When someone asks who is on call, do not guess the name. Call the plantonista_de_hoje tool on the plantao MCP server and answer with exactly what that tool returns."}'

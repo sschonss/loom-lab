@@ -1,57 +1,59 @@
-# Laboratório Loom
+# Loom lab
 
-Uma base só, dois editores. A pessoa no Cursor e a pessoa no OpenCode perguntam as mesmas coisas e recebem a mesma resposta. O laboratório começa pequeno e cresce por etapas.
+One base, two editors. The person in Cursor and the person in OpenCode ask the same questions and get the same answer. The lab starts small and grows in stages.
 
-O relato do teste, com os prints, está em [docs/como-funciona.md](docs/como-funciona.md). Esse texto é a base do artigo.
+The test write-up, with screenshots, is in [docs/how-it-works.md](docs/how-it-works.md). That text is the base for the article.
 
-## Etapa 1, agora
+## Stage 1, now
 
-Duas perguntas.
+Two questions.
 
-**Qual é a janela de deploy?** A resposta é um texto na memória do Loom, na chave `team/deploy-window`: terça e quinta, às 16h.
+**What is the deploy window?** The answer is text in Loom, at `work/decision/deploy-window`: Monday to Friday, 08:00 to 14:00.
 
-**Quem é o plantonista do dia?** A memória não guarda o nome. A chave `team/oncall-lookup` só diz qual ferramenta chamar. O agente chama `plantonista_de_hoje` no MCP `plantao`. Essa ferramenta faz um GET em `http://127.0.0.1:3010/plantonista`, e quem responde é o Mockoon, com o corpo definido em `mockoon/plantao.openapi.yaml`. Trocar a pessoa de plantão é editar esse exemplo e reiniciar o mock.
+**Who is on call today?** Memory does not store the name. The key `work/procedure/plantonista-de-hoje` only says which tool to call. The agent calls `plantonista_de_hoje` on the `plantao` MCP. That tool sends a GET to `http://127.0.0.1:3010/plantonista`, and Mockoon answers with the body in `mockoon/plantao.json`. To change who is on call, edit that file and recreate the container.
 
-## Etapa 2, depois
+## Stage 2, later
 
-Perguntas que pedem mais do que um texto. Exemplo: "como identifico tal log em produção?". A memória passa a descrever o caminho: qual MCP chamar, qual ferramenta, e o que precisa estar configurado na máquina. Essa etapa ainda não está montada.
+Questions that need more than a paragraph. For example: "how do I find this log in production?". Memory then describes the path: which MCP to call, which tool, and what has to be configured on the machine. This stage is not built. The same shape covers the deploy process and which dashboards to watch when deploying a given service.
 
-## Subir
+## Start
 
-Docker com Compose 2.20 ou mais novo, porta 7777 livre. Rode o instalador no seu diretório pessoal:
+Docker with Compose 2.20 or newer, and port 7777 free. Run the installer from your home directory:
 
 ```bash
 curl -fsSL https://github.com/ClickHouse/loom/releases/latest/download/install.sh -o loom-install.sh \
   && sh loom-install.sh && rm loom-install.sh
 ```
 
-Dashboard em http://localhost:7777/.
+Dashboard at http://localhost:7777/.
 
-Suba o mock do plantão. A porta 3000 desta máquina já tem outro serviço, então o Mockoon fica na 3010:
+Start the on-call mock. Port 3000 on this machine already has another service, so Mockoon listens on 3010:
 
 ```bash
 docker compose up -d
 ```
 
-Confira com `curl -s http://127.0.0.1:3010/plantonista`. Grave as duas memórias da etapa 1:
+Check with `curl -s http://127.0.0.1:3010/plantonista`. Then store the two stage 1 memories:
 
 ```bash
 sh scripts/seed-memory.sh
 ```
 
-Para parar, sem apagar as memórias:
+The 24 November 2026 test wrote those memories in Portuguese, from the chats, and did not use this script. The script writes the same keys in English. Running it replaces the value at each key.
+
+To stop, without deleting memories:
 
 ```bash
 docker compose --project-directory "$HOME/.loom" down
 ```
 
-## Ligar os dois editores
+## Connect both editors
 
-Os dois apontam para a mesma URL do Loom e para o mesmo servidor de plantão. O fragmento está em `clients/mcp.json`. O `args` do plantão usa o caminho deste repositório.
+Both point at the same Loom URL and the same on-call server. The fragment is in `clients/mcp.json`. The on-call `args` use this repository's path.
 
-No Cursor, junte esse fragmento em `~/.cursor/mcp.json`. A regra do editor está em `.cursor/rules/loom.mdc`.
+In Cursor, merge that fragment into `~/.cursor/mcp.json`. The editor rule is in `.cursor/rules/loom.mdc`.
 
-No OpenCode, em `~/.config/opencode/opencode.json`, o Loom entra como servidor remoto e o plantão como servidor local:
+In OpenCode, in `~/.config/opencode/opencode.json`, Loom is a remote server and on-call is a local server:
 
 ```json
 {
@@ -70,8 +72,8 @@ No OpenCode, em `~/.config/opencode/opencode.json`, o Loom entra como servidor r
 }
 ```
 
-Abra esta pasta nos dois. Recarregue cada um. No OpenCode, pergunte as duas frases da etapa 1. A janela de deploy vem do Loom. O plantonista vem do serviço.
+Open this folder in both. Reload each one. In OpenCode, ask the two stage 1 questions. The deploy window comes from Loom. The on-call person comes from the service.
 
-## O que este modo não separa
+## What this mode does not separate
 
-Quem alcança `localhost:7777` lê e grava a mesma base. Serve para os dois editores nesta máquina. Um time em máquinas diferentes usa conta, namespace e um token por pessoa: [Tokens and grants](https://loom.clickhouse.com/docs/guides/tokens-and-grants).
+Anyone who can reach `localhost:7777` reads and writes the same base. That is enough for two editors on this machine. A team on different machines uses an account, a namespace, and a token per person: [Tokens and grants](https://loom.clickhouse.com/docs/guides/tokens-and-grants).

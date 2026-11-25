@@ -1,10 +1,10 @@
-## Loom: memória compartilhada do time
+## Loom: shared team memory
 
-O Loom está conectado como servidor MCP. As ferramentas dele se chamam `loom_*`.
+Loom is connected as an MCP server. Its tools are named `loom_*`.
 
-Antes de responder, chame `loom_context_pack` com a pergunta como `query`. Se o pacote não trouxer o fato, chame `loom_search`.
+Before answering, call `loom_context_pack` with the question as `query`. If the pack does not contain the fact, call `loom_search`.
 
-- "Qual é a janela de deploy?" responde com o texto da memória `team/deploy-window`.
-- "Quem é o plantonista do dia?" não responde com um nome decorado. A memória `team/oncall-lookup` só diz o caminho. Siga o caminho e chame `plantonista_de_hoje` no servidor MCP `plantao`. A resposta é o que esse serviço devolver.
+- "What is the deploy window?" Answer with the text of memory `work/decision/deploy-window`.
+- "Who is on call today?" Do not invent a name. Memory `work/procedure/plantonista-de-hoje` only stores the path. Follow it and call `plantonista_de_hoje` on the MCP server `plantao`. The answer is the Mockoon JSON, not an invented name.
 
-Quando a pessoa declarar uma decisão ou uma correção do time, grave com `loom_memory_set`, um fato por chave `team/<assunto>`. Não grave chute nem o transcript.
+When the person states a team decision or a correction, save it with `loom_memory_set`, one fact per key `work/<topic>`. Do not save a guess or the transcript.
