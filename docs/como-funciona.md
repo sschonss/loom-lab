@@ -1,10 +1,24 @@
 # Como o laboratório funciona
 
-Este texto é a base do artigo. Ele descreve o que o laboratório prova, com os prints do teste feito em 24 de novembro de 2026.
+Este texto é a base do artigo. Ele descreve a ideia e o que o laboratório já provou, com os prints do teste feito em 24 de novembro de 2026.
 
-O time não está construindo um produto de IA. As pessoas usam editores diferentes, Cursor e OpenCode, para fazer o trabalho do dia a dia. A informação que elas precisam não pode ficar presa no chat de cada uma, nem copiada para dentro de cada repositório, porque isso envelhece.
+## A ideia
 
-A base fica num servidor só, o [Loom](https://loom.clickhouse.com/), rodando nesta máquina em `http://127.0.0.1:7777`. Os dois editores falam com ele pelo MCP. Quem grava num editor, o outro lê.
+O time não está construindo um produto de IA. As pessoas usam o editor que cada uma prefere, Cursor, OpenCode ou Claude Code, para fazer o trabalho do dia a dia. O conhecimento não pode ficar preso no chat de uma delas, nem num agente especializado para cada assunto.
+
+A memória é uma só. Quem descobre uma coisa grava. Quem pergunta depois, em outro editor, recebe a mesma resposta. Trocar de provedor não troca o conhecimento.
+
+O laboratório mostra isso com perguntas triviais, para o mecanismo ficar visível. A mesma forma responde as perguntas de verdade do time:
+
+- Como eu encontro este log em produção?
+- Qual é o nosso processo de deploy?
+- Vou fazer o deploy deste serviço. O que eu preciso olhar, como eu olho, e quais dashboards importam?
+
+Nesses casos a memória não é um texto solto. Ela diz o caminho: qual ferramenta chamar, o que conferir, qual dashboard abrir. O agente que a pessoa já usa segue esse caminho. Não entra um bot novo no meio.
+
+## O mecanismo, no pequeno
+
+A base fica num servidor só, o [Loom](https://loom.clickhouse.com/), rodando nesta máquina em `http://127.0.0.1:7777`. Os editores falam com ele pelo MCP. Quem grava num editor, o outro lê.
 
 Há dois jeitos de responder.
 
@@ -67,8 +81,18 @@ O Cursor usa o plugin do Loom e a entrada `loom` em `~/.cursor/mcp.json`. O plan
 
 O OpenCode usa a mesma URL do Loom em `~/.config/opencode/opencode.json`.
 
-## O que este laboratório ainda não faz
+## Para onde o mesmo mecanismo vai
 
-A etapa seguinte é uma pergunta como "como identifico tal log em produção?". A memória descreveria qual ferramenta chamar e o que precisa estar configurado. Isso ainda não está montado.
+O plantonista já é o formato das perguntas maiores. A memória não carrega o dado vivo. Ela carrega o jeito de obtê-lo. O dado vem da ferramenta.
+
+| Pergunta do dia a dia | O que fica no Loom | De onde sai a resposta |
+| --- | --- | --- |
+| Qual é a janela de deploy? | O fato, em texto. | A própria memória. |
+| Quem está de plantão? | O procedimento: chame `plantonista_de_hoje`. | O Mockoon, pelo MCP `plantao`. |
+| Como acho este log em produção? | Onde olhar, qual consulta usar, qual ferramenta chamar. | O sistema de logs, pela ferramenta indicada. |
+| Qual é o processo de deploy? | Os passos e o que conferir antes de seguir. | A memória, e a ferramenta quando um passo depender de um sistema. |
+| Vou fazer o deploy deste serviço. O que olho? | Os dashboards, a ordem e o que cada um mostra. | A memória aponta o painel. O painel mostra o número. |
+
+Essas três últimas ainda não estão montadas. O laboratório para nelas de propósito: as duas primeiras já mostram que Cursor e OpenCode compartilham o fato e o caminho. Claude Code entra do mesmo jeito, apontando o MCP para o mesmo Loom. O resultado não depende do editor.
 
 Também não há separação de time. Um servidor compartilhado entre máquinas pede conta, namespace e um token por pessoa.
