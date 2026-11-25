@@ -45,6 +45,10 @@ Cursor or OpenCode
 | `work/decision/deploy-window` | The deploy window is Monday to Friday, 8:00 to 14:00. Original: "A janela de deploy é de segunda a sexta-feira, das 8h às 14h." | Cursor |
 | `work/procedure/plantonista-de-hoje` | Do not guess the name. Call `plantonista_de_hoje` on the `plantao` MCP and answer with whatever it returns. | OpenCode |
 
+The Memories page shows both records on 24 November 2026. OpenCode wrote the on-call procedure. Cursor wrote the deploy window. The stored text is still the Portuguese from the chats.
+
+![Loom Memories page with both records](images/05-loom-memories-dashboard.jpg)
+
 The mock body is in `mockoon/plantao.json`. During the test the response was Luiz Schons, channel `#plantao`, until 25 November 2026 at 09:00.
 
 ## Test 1. One fact, two editors
