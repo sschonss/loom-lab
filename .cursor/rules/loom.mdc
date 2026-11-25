@@ -1,0 +1,15 @@
+---
+description: Memória compartilhada do Loom neste laboratório
+alwaysApply: true
+---
+
+## Loom: memória compartilhada do time
+
+O Loom está conectado como servidor MCP. As ferramentas dele se chamam `loom_*`.
+
+Antes de responder, chame `loom_context_pack` com a pergunta como `query`. Se o pacote não trouxer o fato, chame `loom_search`.
+
+- "Qual é a janela de deploy?" responde com o texto da memória `team/deploy-window`.
+- "Quem é o plantonista do dia?" não responde com um nome decorado. A memória `team/oncall-lookup` só diz o caminho. Siga o caminho e chame `plantonista_de_hoje` no servidor MCP `plantao`. A resposta é o que esse serviço devolver.
+
+Quando a pessoa declarar uma decisão ou uma correção do time, grave com `loom_memory_set`, um fato por chave `team/<assunto>`. Não grave chute nem o transcript.

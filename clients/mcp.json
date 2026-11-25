@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "loom": {
+      "url": "http://localhost:7777/mcp?toolset=coding"
+    },
+    "plantao": {
+      "command": "python3",
+      "args": ["plantao/server.py"]
+    }
+  }
+}
